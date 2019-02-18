@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Apache.Arrow.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Apache.Arrow.Types;
 
 namespace Apache.Arrow
 {
@@ -44,36 +44,6 @@ namespace Apache.Arrow
             DataType = dataType ?? NullType.Default;
             IsNullable = nullable;
             Metadata = metadata?.ToDictionary(kv => kv.Key, kv => kv.Value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (this == obj)
-            {
-                return true;
-            }
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-
-            Field other = (Field)obj;
-            if (this.Name == other.Name && this.IsNullable == other.IsNullable &&
-                this.DataType.TypeId == other.DataType.TypeId)
-            {
-                if (this.HasMetadata && other.HasMetadata)
-                {
-                    return this.Metadata.Keys.SequenceEqual(other.Metadata.Keys) && this.Metadata.Values.SequenceEqual(other.Metadata.Values);
-                }
-                else if (!this.HasMetadata && !other.HasMetadata) {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return false;
         }
     }
 }
