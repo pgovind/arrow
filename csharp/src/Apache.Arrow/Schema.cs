@@ -78,31 +78,31 @@ namespace Apache.Arrow
 
 
             Schema other = (Schema)obj;
-            var otherFields = other.Fields;
+            var otherFields = other._fields;
 
             if (this.HasMetadata != other.HasMetadata)
             {
                 return false;
             }
-            if (this.Fields.Count != otherFields.Count)
+            if (this._fields.Count != otherFields.Count)
             {
                 return false;
             }
-            foreach (var pair in Fields)
+            
+            for (int ii = 0; ii < _fields.Count; ii++)
             {
-                var thisFieldString = pair.Key;
-                if (!otherFields.ContainsKey(thisFieldString))
+                if (!_fields[ii].Equals(otherFields[ii]))
                 {
-                    return false;
-                }
-                if (!pair.Value.Equals(otherFields[thisFieldString])) {
                     return false;
                 }
             }
 
             if (this.HasMetadata && other.HasMetadata)
             {
-                return this.Metadata.Keys.SequenceEqual(other.Metadata.Keys) && this.Metadata.Values.SequenceEqual(other.Metadata.Values);
+                return this.Metadata.Keys.Count() == other.Metadata.Keys.Count() &&
+                       this.Metadata.Keys.All(k => other.Metadata.ContainsKey(k) && this.Metadata[k] == other.Metadata[k]) &&
+                       other.Metadata.Keys.All(k => this.Metadata.ContainsKey(k) && other.Metadata[k] == this.Metadata[k]);
+                //return this.Metadata.OrderBy(r => r.Key).SequenceEqual(other.Metadata.OrderBy(r => r.Key));
             }
             return true;
         }

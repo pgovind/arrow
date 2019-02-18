@@ -63,7 +63,10 @@ namespace Apache.Arrow
             {
                 if (this.HasMetadata && other.HasMetadata)
                 {
-                    return this.Metadata.Keys.SequenceEqual(other.Metadata.Keys) && this.Metadata.Values.SequenceEqual(other.Metadata.Values);
+                    return this.Metadata.Keys.Count() == other.Metadata.Keys.Count() &&
+                           this.Metadata.Keys.All(k => other.Metadata.ContainsKey(k) && this.Metadata[k] == other.Metadata[k]) &&
+                           other.Metadata.Keys.All(k => this.Metadata.ContainsKey(k) && other.Metadata[k] == this.Metadata[k]);
+                    //return this.Metadata.OrderBy(r => r.Key).SequenceEqual(other.Metadata.OrderBy(r => r.Key));
                 }
                 else if (!this.HasMetadata && !other.HasMetadata) {
                     return true;
