@@ -66,33 +66,19 @@ namespace Apache.Arrow
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            return Equals((Schema)obj);
+            return Equals(obj as Schema);
         }
 
         public bool Equals(Schema other)
         {
-            if (this == other)
-            {
-                return true;
-            }
-            var otherFields = other._fields;
-
-            if (this.HasMetadata != other.HasMetadata)
-            {
-                return false;
-            }
-            if (this._fields.Count != otherFields.Count)
+            if (other == null || HasMetadata != other.HasMetadata || _fields.Count != other._fields.Count)
             {
                 return false;
             }
             
             for (int ii = 0; ii < _fields.Count; ii++)
             {
-                if (!_fields[ii].Equals(otherFields[ii]))
+                if (!_fields[ii].Equals(other._fields[ii]))
                 {
                     return false;
                 }
@@ -103,7 +89,6 @@ namespace Apache.Arrow
                 return this.Metadata.Keys.Count() == other.Metadata.Keys.Count() &&
                        this.Metadata.Keys.All(k => other.Metadata.ContainsKey(k) && this.Metadata[k] == other.Metadata[k]) &&
                        other.Metadata.Keys.All(k => this.Metadata.ContainsKey(k) && other.Metadata[k] == this.Metadata[k]);
-                //return this.Metadata.OrderBy(r => r.Key).SequenceEqual(other.Metadata.OrderBy(r => r.Key));
             }
             return true;
         }

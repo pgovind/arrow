@@ -48,36 +48,21 @@ namespace Apache.Arrow
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            return Equals((Field)obj);
+            return Equals(obj as Field);
         }
 
         public bool Equals(Field other)
         {
-            if (this == other)
-            {
-                return true;
-            }
-            if (this.Name == other.Name && this.IsNullable == other.IsNullable &&
-                this.DataType.TypeId == other.DataType.TypeId)
+            if (other != null && this.Name == other.Name && this.IsNullable == other.IsNullable &&
+                this.DataType.TypeId == other.DataType.TypeId && HasMetadata == other.HasMetadata)
             {
                 if (this.HasMetadata && other.HasMetadata)
                 {
                     return this.Metadata.Keys.Count() == other.Metadata.Keys.Count() &&
                            this.Metadata.Keys.All(k => other.Metadata.ContainsKey(k) && this.Metadata[k] == other.Metadata[k]) &&
                            other.Metadata.Keys.All(k => this.Metadata.ContainsKey(k) && other.Metadata[k] == this.Metadata[k]);
-                    //return this.Metadata.OrderBy(r => r.Key).SequenceEqual(other.Metadata.OrderBy(r => r.Key));
                 }
-                else if (!this.HasMetadata && !other.HasMetadata) {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
             return false;
         }
