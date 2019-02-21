@@ -59,7 +59,8 @@ namespace Apache.Arrow.Ipc
             IArrowTypeVisitor<BinaryType>,
             IArrowTypeVisitor<TimestampType>,
             IArrowTypeVisitor<ListType>,
-            IArrowTypeVisitor<UnionType>
+            IArrowTypeVisitor<UnionType>,
+            IArrowTypeVisitor<BooleanType>
         {
             private FlatBufferBuilder Builder { get; }
 

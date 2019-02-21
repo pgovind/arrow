@@ -72,7 +72,7 @@ namespace Apache.Arrow.Ipc
             return new ArrowFileReader(stream);
         }
 
-        protected override async Task<Schema> ReadSchemaAsync()
+        protected internal override async Task<Schema> ReadSchemaAsync()
         {
             if (HasReadSchema)
             {

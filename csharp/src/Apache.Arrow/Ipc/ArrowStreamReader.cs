@@ -20,8 +20,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("Apache.Arrow.Tests")]
 namespace Apache.Arrow.Ipc
 {
     public class ArrowStreamReader : IArrowReader, IDisposable
@@ -113,7 +115,7 @@ namespace Apache.Arrow.Ipc
             return null;
         }
 
-        protected virtual async Task<Schema> ReadSchemaAsync()
+        protected internal virtual async Task<Schema> ReadSchemaAsync()
         {
             if (HasReadSchema)
             {
