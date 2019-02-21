@@ -18,12 +18,16 @@ using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using FlatBuffers;
 
+
+[assembly: InternalsVisibleTo("Apache.Arrow.Tests")]
 namespace Apache.Arrow.Ipc
 {
+
     public class ArrowStreamWriter : IDisposable
     {
         internal class ArrowRecordBatchFlatBufferBuilder :
@@ -313,7 +317,7 @@ namespace Apache.Arrow.Ipc
         }
 
 
-        protected async Task<Offset<Flatbuf.Schema>> WriteSchemaAsync(Schema schema, CancellationToken cancellationToken)
+        protected internal async Task<Offset<Flatbuf.Schema>> WriteSchemaAsync(Schema schema, CancellationToken cancellationToken)
         {
             Builder.Clear();
 
