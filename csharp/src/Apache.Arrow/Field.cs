@@ -20,7 +20,7 @@ using Apache.Arrow.Types;
 
 namespace Apache.Arrow
 {
-    public partial class Field
+    public partial class Field: IEquatable<Field>
     {
         public IArrowType DataType { get; }
 
@@ -48,16 +48,19 @@ namespace Apache.Arrow
 
         public override bool Equals(object obj)
         {
-            if (this == obj)
-            {
-                return true;
-            }
             if (obj == null || !this.GetType().Equals(obj.GetType()))
             {
                 return false;
             }
+            return Equals((Field)obj);
+        }
 
-            Field other = (Field)obj;
+        public bool Equals(Field other)
+        {
+            if (this == other)
+            {
+                return true;
+            }
             if (this.Name == other.Name && this.IsNullable == other.IsNullable &&
                 this.DataType.TypeId == other.DataType.TypeId)
             {
@@ -77,6 +80,21 @@ namespace Apache.Arrow
                 }
             }
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            string concatenatedString = DataType.Name;
+            concatenatedString += Name + IsNullable;
+            if (this.HasMetadata)
+            {
+                var orderedMetadata = this.Metadata.OrderBy(kv => kv.Key);
+                foreach (var kv in orderedMetadata)
+                {
+                    concatenatedString += kv.Key + kv.Value;
+                }
+            }
+            return concatenatedString.GetHashCode();
         }
     }
 }

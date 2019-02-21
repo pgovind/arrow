@@ -46,8 +46,11 @@ namespace Apache.Arrow.Tests
             Field f0_with_meta = new Field.Builder().Name("f0").DataType(Int32Type.Default).Nullable(true).Metadata("a", "1").Metadata("b", "2").Build();
 
             Assert.True(f0_nullable.Equals(f0_other));
+            Assert.True(f0_nullable.GetHashCode() == f0_other.GetHashCode());
             Assert.False(f0_nullable.Equals(f0_nonnullable));
+            Assert.False(f0_nullable.GetHashCode() == f0_nonnullable.GetHashCode());
             Assert.False(f0_nullable.Equals(f0_with_meta));
+            Assert.False(f0_nullable.GetHashCode() == f0_with_meta.GetHashCode());
         }
 
         [Fact]

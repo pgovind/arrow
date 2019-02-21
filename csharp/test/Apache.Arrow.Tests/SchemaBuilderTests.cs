@@ -124,9 +124,13 @@ namespace Apache.Arrow.Tests
                 Assert.True(metadata1.Keys.SequenceEqual(schema1.Metadata.Keys) && metadata1.Values.SequenceEqual(schema1.Metadata.Values));
                 Assert.True(metadata0.Keys.SequenceEqual(schema2.Metadata.Keys) && metadata0.Values.SequenceEqual(schema2.Metadata.Values));
                 Assert.True(schema0.Equals(schema2));
+                Assert.True(schema0.GetHashCode() == schema2.GetHashCode());
                 Assert.False(schema0.Equals(schema1));
+                Assert.False(schema0.GetHashCode() == schema1.GetHashCode());
                 Assert.False(schema2.Equals(schema1));
+                Assert.False(schema2.GetHashCode() == schema1.GetHashCode());
                 Assert.False(schema2.Equals(schema3));
+                Assert.False(schema2.GetHashCode() == schema3.GetHashCode());
             }
 
             [Theory]

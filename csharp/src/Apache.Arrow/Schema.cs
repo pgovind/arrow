@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace Apache.Arrow
 {
-    public partial class Schema
+    public partial class Schema : IEquatable<Schema>
     {
         public IReadOnlyDictionary<string, Field> Fields { get; }
         public IReadOnlyDictionary<string, string> Metadata { get; }
@@ -66,18 +66,19 @@ namespace Apache.Arrow
 
         public override bool Equals(object obj)
         {
-            if (this == obj)
-            {
-                return true;
-            }
-
             if (obj == null || !this.GetType().Equals(obj.GetType()))
             {
                 return false;
             }
+            return Equals((Schema)obj);
+        }
 
-
-            Schema other = (Schema)obj;
+        public bool Equals(Schema other)
+        {
+            if (this == other)
+            {
+                return true;
+            }
             var otherFields = other._fields;
 
             if (this.HasMetadata != other.HasMetadata)
@@ -105,6 +106,25 @@ namespace Apache.Arrow
                 //return this.Metadata.OrderBy(r => r.Key).SequenceEqual(other.Metadata.OrderBy(r => r.Key));
             }
             return true;
+        }
+
+        public override int GetHashCode()
+        {
+            int fieldHashCodes = 0;
+            foreach (Field field in _fields)
+            {
+                fieldHashCodes += field.GetHashCode();
+            }
+            string concatenatedMetadata = System.String.Empty;
+            if (this.HasMetadata)
+            {
+                var orderedMetadata = this.Metadata.OrderBy(kv => kv.Key);
+                foreach (var kv in orderedMetadata)
+                {
+                    concatenatedMetadata += kv.Key + kv.Value;
+                }
+            }
+            return fieldHashCodes + concatenatedMetadata.GetHashCode();
         }
     }
 }
