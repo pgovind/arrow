@@ -20,6 +20,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Apache.Arrow.Tests
 {
@@ -31,43 +32,77 @@ namespace Apache.Arrow.Tests
             {
                 var stream = new MemoryStream();
                 var writer = new ArrowStreamWriter(stream, schema);
-                writer.WriteSchemaAsync(schema, System.Threading.CancellationToken.None).RunSynchronously();
+                writer.WriteSchemaAsync(schema, System.Threading.CancellationToken.None).Wait();
 
                 var reader = new ArrowStreamReader(stream);
+                reader.ReadSchemaAsync().Wait();
                 var readSchema = reader.Schema;
                 Assert.True(schema.Equals(readSchema));
             }
+            //[Fact]
+            //public void TestRoundTripPrimitiveFields()
+            //{
+            //    Field f0 = new Field.Builder().Name("f0").DataType(Int8Type.Default).Build();
+            //    Field f1 = new Field.Builder().Name("f1").DataType(Int16Type.Default).Build();
+            //    Field f2 = new Field.Builder().Name("f2").DataType(Int32Type.Default).Build();
+            //    Field f3 = new Field.Builder().Name("f3").DataType(Int64Type.Default).Build();
+            //    Field f4 = new Field.Builder().Name("f4").DataType(UInt8Type.Default).Build();
+            //    Field f5 = new Field.Builder().Name("f5").DataType(UInt16Type.Default).Build();
+            //    Field f6 = new Field.Builder().Name("f6").DataType(UInt32Type.Default).Build();
+            //    Field f7 = new Field.Builder().Name("f7").DataType(UInt64Type.Default).Build();
+            //    Field f8 = new Field.Builder().Name("f8").DataType(FloatType.Default).Build();
+            //    Field f9 = new Field.Builder().Name("f9").DataType(DoubleType.Default).Build();
+            //    Field f10 = new Field.Builder().Name("f10").DataType(BooleanType.Default).Build();
+
+            //    Schema schema = new Schema.Builder()
+            //                        .Field(f0)
+            //                        .Field(f1)
+            //                        .Field(f2)
+            //                        .Field(f3)
+            //                        .Field(f4)
+            //                        .Field(f5)
+            //                        .Field(f6)
+            //                        .Field(f7)
+            //                        .Field(f8)
+            //                        .Field(f9)
+            //                        .Field(f10)
+            //                        .Build();
+
+
+            //    CheckRoundTrip(schema);
+            //}
+
             [Fact]
-            public void TestRoundTripPrimitiveFields()
+            public void TestRoundTripPrimitiveField()
             {
                 Field f0 = new Field.Builder().Name("f0").DataType(Int8Type.Default).Build();
-                Field f1 = new Field.Builder().Name("f1").DataType(Int16Type.Default).Build();
-                Field f2 = new Field.Builder().Name("f2").DataType(Int32Type.Default).Build();
-                Field f3 = new Field.Builder().Name("f3").DataType(Int64Type.Default).Build();
-                Field f4 = new Field.Builder().Name("f4").DataType(UInt8Type.Default).Build();
-                Field f5 = new Field.Builder().Name("f5").DataType(UInt16Type.Default).Build();
-                Field f6 = new Field.Builder().Name("f6").DataType(UInt32Type.Default).Build();
-                Field f7 = new Field.Builder().Name("f7").DataType(UInt64Type.Default).Build();
-                Field f8 = new Field.Builder().Name("f8").DataType(FloatType.Default).Build();
-                Field f9 = new Field.Builder().Name("f9").DataType(DoubleType.Default).Build();
-                Field f10 = new Field.Builder().Name("f10").DataType(BooleanType.Default).Build();
+                //Field f1 = new Field.Builder().Name("f1").DataType(Int16Type.Default).Build();
+                //Field f2 = new Field.Builder().Name("f2").DataType(Int32Type.Default).Build();
+                //Field f3 = new Field.Builder().Name("f3").DataType(Int64Type.Default).Build();
+                //Field f4 = new Field.Builder().Name("f4").DataType(UInt8Type.Default).Build();
+                //Field f5 = new Field.Builder().Name("f5").DataType(UInt16Type.Default).Build();
+                //Field f6 = new Field.Builder().Name("f6").DataType(UInt32Type.Default).Build();
+                //Field f7 = new Field.Builder().Name("f7").DataType(UInt64Type.Default).Build();
+                //Field f8 = new Field.Builder().Name("f8").DataType(FloatType.Default).Build();
+                //Field f9 = new Field.Builder().Name("f9").DataType(DoubleType.Default).Build();
+                //Field f10 = new Field.Builder().Name("f10").DataType(BooleanType.Default).Build();
 
                 Schema schema = new Schema.Builder()
                                     .Field(f0)
-                                    .Field(f1)
-                                    .Field(f2)
-                                    .Field(f3)
-                                    .Field(f4)
-                                    .Field(f5)
-                                    .Field(f6)
-                                    .Field(f7)
-                                    .Field(f8)
-                                    .Field(f9)
-                                    .Field(f10)
+                                    //.Field(f1)
+                                    //.Field(f2)
+                                    //.Field(f3)
+                                    //.Field(f4)
+                                    //.Field(f5)
+                                    //.Field(f6)
+                                    //.Field(f7)
+                                    //.Field(f8)
+                                    //.Field(f9)
+                                    //.Field(f10)
                                     .Build();
 
 
-                                    
+                CheckRoundTrip(schema);
             }
         }
 
