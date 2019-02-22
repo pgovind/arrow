@@ -31,54 +31,64 @@ namespace Apache.Arrow.Tests
             void CheckRoundTrip(Schema schema)
             {
                 var stream = new MemoryStream();
+                var initialPosition = stream.Position;
                 var writer = new ArrowStreamWriter(stream, schema);
                 writer.WriteSchemaAsync(schema, System.Threading.CancellationToken.None).Wait();
 
+                var newPosition = stream.Position;
+                stream.Position = initialPosition;
                 var reader = new ArrowStreamReader(stream);
                 reader.ReadSchemaAsync().Wait();
                 var readSchema = reader.Schema;
                 Assert.True(schema.Equals(readSchema));
             }
-            //[Fact]
-            //public void TestRoundTripPrimitiveFields()
-            //{
-            //    Field f0 = new Field.Builder().Name("f0").DataType(Int8Type.Default).Build();
-            //    Field f1 = new Field.Builder().Name("f1").DataType(Int16Type.Default).Build();
-            //    Field f2 = new Field.Builder().Name("f2").DataType(Int32Type.Default).Build();
-            //    Field f3 = new Field.Builder().Name("f3").DataType(Int64Type.Default).Build();
-            //    Field f4 = new Field.Builder().Name("f4").DataType(UInt8Type.Default).Build();
-            //    Field f5 = new Field.Builder().Name("f5").DataType(UInt16Type.Default).Build();
-            //    Field f6 = new Field.Builder().Name("f6").DataType(UInt32Type.Default).Build();
-            //    Field f7 = new Field.Builder().Name("f7").DataType(UInt64Type.Default).Build();
-            //    Field f8 = new Field.Builder().Name("f8").DataType(FloatType.Default).Build();
-            //    Field f9 = new Field.Builder().Name("f9").DataType(DoubleType.Default).Build();
-            //    Field f10 = new Field.Builder().Name("f10").DataType(BooleanType.Default).Build();
-
-            //    Schema schema = new Schema.Builder()
-            //                        .Field(f0)
-            //                        .Field(f1)
-            //                        .Field(f2)
-            //                        .Field(f3)
-            //                        .Field(f4)
-            //                        .Field(f5)
-            //                        .Field(f6)
-            //                        .Field(f7)
-            //                        .Field(f8)
-            //                        .Field(f9)
-            //                        .Field(f10)
-            //                        .Build();
-
-
-            //    CheckRoundTrip(schema);
-            //}
-
             [Fact]
-            public void TestRoundTripPrimitiveField()
+            public void TestRoundTripPrimitiveFields()
             {
                 Field f0 = new Field.Builder().Name("f0").DataType(Int8Type.Default).Build();
-                //Field f1 = new Field.Builder().Name("f1").DataType(Int16Type.Default).Build();
-                //Field f2 = new Field.Builder().Name("f2").DataType(Int32Type.Default).Build();
-                //Field f3 = new Field.Builder().Name("f3").DataType(Int64Type.Default).Build();
+                Field f1 = new Field.Builder().Name("f1").DataType(Int16Type.Default).Build();
+                Field f2 = new Field.Builder().Name("f2").DataType(Int32Type.Default).Build();
+                Field f3 = new Field.Builder().Name("f3").DataType(Int64Type.Default).Build();
+                Field f4 = new Field.Builder().Name("f4").DataType(UInt8Type.Default).Build();
+                Field f5 = new Field.Builder().Name("f5").DataType(UInt16Type.Default).Build();
+                Field f6 = new Field.Builder().Name("f6").DataType(UInt32Type.Default).Build();
+                Field f7 = new Field.Builder().Name("f7").DataType(UInt64Type.Default).Build();
+                Field f8 = new Field.Builder().Name("f8").DataType(FloatType.Default).Build();
+                Field f9 = new Field.Builder().Name("f9").DataType(DoubleType.Default).Build();
+                Field f10 = new Field.Builder().Name("f10").DataType(BooleanType.Default).Build();
+
+                Schema schema = new Schema.Builder()
+                                    .Field(f0)
+                                    .Field(f1)
+                                    .Field(f2)
+                                    .Field(f3)
+                                    .Field(f4)
+                                    .Field(f5)
+                                    .Field(f6)
+                                    .Field(f7)
+                                    .Field(f8)
+                                    .Field(f9)
+                                    .Field(f10)
+                                    .Build();
+
+
+                CheckRoundTrip(schema);
+            }
+
+            [Fact]
+            public void TestRoundTripNestedFields()
+            {
+                
+                Field f = new Field.Builder().Name("f0").DataType(Int32Type.Default).Build();
+                ListType lt = new ListType(f, Int32Type.Default);
+                Field flt = new Field.Builder().DataType(lt).Name("list").Build();
+
+                Field f0 = new Field.Builder().Name("f0").DataType(Int32Type.Default).Build();
+                Field f1 = new Field.Builder().Name("f1").DataType(Int16Type.Default).Build();
+                Field f2 = new Field.Builder().Name("f2").DataType(Int32Type.Default).Build();
+                StructType st = new StructType(new List<Field>() {f0, f1, f2});
+
+                Field fst = new Field.Builder().Name("f3").DataType(st).Build();
                 //Field f4 = new Field.Builder().Name("f4").DataType(UInt8Type.Default).Build();
                 //Field f5 = new Field.Builder().Name("f5").DataType(UInt16Type.Default).Build();
                 //Field f6 = new Field.Builder().Name("f6").DataType(UInt32Type.Default).Build();
@@ -88,8 +98,8 @@ namespace Apache.Arrow.Tests
                 //Field f10 = new Field.Builder().Name("f10").DataType(BooleanType.Default).Build();
 
                 Schema schema = new Schema.Builder()
-                                    .Field(f0)
-                                    //.Field(f1)
+                                    .Field(flt)
+                                    .Field(fst)
                                     //.Field(f2)
                                     //.Field(f3)
                                     //.Field(f4)
