@@ -37,7 +37,7 @@ namespace Apache.Arrow.Tests
             var reader = new ArrowStreamReader(stream);
             reader.ReadSchemaAsync().Wait();
             var readSchema = reader.Schema;
-            Assert.True(schema.Equals(readSchema));
+            Assert.True(SchemaComparer.Equals(schema, readSchema));
         }
         public class SchemaTests
         {
@@ -159,7 +159,7 @@ namespace Apache.Arrow.Tests
                 RecordBatch readInBatch = reader.ReadNextRecordBatchAsync().Result;
 
                 Assert.Equal(batch.ColumnCount, readInBatch.ColumnCount);
-                Assert.True(batch.Schema.Equals(readInBatch.Schema));
+                Assert.True(SchemaComparer.Equals(batch.Schema, readInBatch.Schema));
 
                 for (int i = 0; i < batch.ColumnCount; i++)
                 {
