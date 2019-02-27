@@ -14,6 +14,7 @@
 // limitations under the License.
 
 using System.Runtime.InteropServices;
+using System;
 using System.Text;
 using Apache.Arrow.Types;
 
@@ -35,17 +36,29 @@ namespace Apache.Arrow
 
         public override void Accept(IArrowArrayVisitor visitor) => Accept(this, visitor);
 
+        new public ReadOnlySpan<char> Values => ValueBuffer.Span.CastTo<char>();
+        new public ReadOnlySpan<char> GetBytes(int index)
+        {
+            var offset = GetValueOffset(index);
+            var length = GetValueLength(index);
+
+            return Values.Slice(offset, length);
+        }
+
         public string GetString(int index, Encoding encoding = default)
         {
-            encoding = encoding ?? Encoding.UTF8;
+            // I don't think I need encoding here? Whatever chars went in should come out that same?
+            //encoding = encoding ?? Encoding.UTF8;
 
-            var bytes = GetBytes(index);
+            ReadOnlySpan<char> bytes = GetBytes(index);
 
-            unsafe
-            {
-                fixed (byte* data = &MemoryMarshal.GetReference(bytes))
-                    return encoding.GetString(data, bytes.Length);
-            }
+            return bytes.ToString();
+            //unsafe
+            //{
+            //    var reference = MemoryMarshal.GetReference(bytes);
+            //    fixed (byte* data = &MemoryMarshal.GetReference(bytes))
+            //        return encoding.GetString(data, bytes.Length);
+            //}
         }
     }
 }
