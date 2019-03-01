@@ -106,6 +106,13 @@ namespace Apache.Arrow.Tests
                 Assert.Equal(20, span[1]);
                 Assert.Equal(0, span[2]);
             }
+
+            [Fact]
+            public void TestResizeDownsize()
+            {
+                var builder = new ArrowBuffer.Builder<int>(1000);
+                builder.Resize(500); //This should throw
+            }
         }
 
         public class AppendRange
