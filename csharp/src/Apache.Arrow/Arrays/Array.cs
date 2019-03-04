@@ -59,5 +59,22 @@ namespace Apache.Arrow
                     break;
             }
         }
+
+        public Array Slice(int offset, int length)
+        {
+            if (offset > Length)
+            {
+                throw new ArgumentException($"Offset {offset} cannot be greater than Length {Length} for Array.Slice");
+            }
+
+            length = Math.Min(Data.Length - offset, length);
+            offset += Data.Offset;
+
+            ArrayData newData = new ArrayData(Data);
+            newData.Length = length;
+            newData.Offset = offset;
+
+            return ArrowArrayFactory.BuildArray(newData) as Array;
+        }
     }
 }

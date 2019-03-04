@@ -22,9 +22,9 @@ namespace Apache.Arrow
     public sealed class ArrayData
     {
         public readonly IArrowType DataType;
-        public readonly int Length;
+        public int Length;
         public readonly int NullCount;
-        public readonly int Offset;
+        public int Offset;
         public readonly ArrowBuffer[] Buffers;
         public readonly ArrayData[] Children;
 
@@ -40,5 +40,7 @@ namespace Apache.Arrow
             Buffers = buffers?.ToArray();
             Children = children?.ToArray();
         }
+
+        public ArrayData(ArrayData arrayData) : this(arrayData.DataType, arrayData.Length, arrayData.NullCount, arrayData.Offset, arrayData.Buffers, arrayData.Children) { }
     }
 }
